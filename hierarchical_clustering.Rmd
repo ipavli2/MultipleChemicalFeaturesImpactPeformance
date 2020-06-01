@@ -1,3 +1,5 @@
+library(gplots)
+
 # Calculate the average profile for each compound that was active at 100 uM (mp-value < 0.05) 
 
 profiles_d100_active_avg <- profiles_d100_active %>% group_by(Image_Metadata_New_Name) %>% summarize_each(mean)
