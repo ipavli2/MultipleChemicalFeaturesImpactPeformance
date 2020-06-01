@@ -1,0 +1,59 @@
+
+
+profiles_all <- rbind(profiles_D1_robust, profiles_D2_robust, profiles_D3_robust, profiles_D4_robust)
+profiles_all <- subset(profiles_all, select = -c(Cells_Number_Object_Number, Nuclei_Number_Object_Number, Cytoplasm_Number_Object_Number))
+
+variables <-
+  colnames(profiles_all) %>%
+  str_subset("^Nuclei_|^Cells_|^Cytoplasm_")
+  
+profiles_all <- cytominer::variable_select( 
+		 population = profiles_all, 
+		 variables = variables, 
+		 operation = "drop_na_columns", 
+		 cutoff = 0)
+		 
+variables <-
+  colnames(profiles_all) %>%
+  str_subset("^Nuclei_|^Cells_|^Cytoplasm_")
+  
+profiles_all <-
+     cytominer::variable_select(
+         population = profiles_all,
+         variables = variables,
+         sample = profiles_all,
+         operation = "variance_threshold"
+    ) 
+
+variables <-
+  colnames(profiles_all) %>%
+  str_subset("^Nuclei_|^Cells_|^Cytoplasm_")
+  
+feature_replicate_correlations <-
+    profiles_all %>%
+    cytominer::variable_importance(
+         variables = variables,
+         strata = c("Image_Metadata_NotebookName", "Image_Metadata_Concentration"),
+         replicates = 4)
+		 
+profiles_all %<>%
+  select_(.dots = setdiff(x = colnames(profiles_all),
+                          y = feature_replicate_correlations %>%
+                            filter(median < 0.5) %>%
+                            magrittr::extract2("variable"))
+          )
+
+variables <-
+  colnames(profiles_all) %>%
+  str_subset("^Nuclei_|^Cells_|^Cytoplasm_")
+  
+profiles_all <-
+  cytominer::variable_select(
+    population = profiles_all,
+    variables = variables,
+    sample = profiles_all,
+    operation = "correlation_threshold",
+    cutoff = 0.95) %>%
+  collect()
+  
+write.csv(profiles_all, "profiles_all_robust_reduced.csv")
