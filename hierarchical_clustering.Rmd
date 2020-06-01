@@ -1,0 +1,37 @@
+# Calculate the average profile for each compound that was active at 100 uM (mp-value < 0.05) 
+
+profiles_d100_active_avg <- profiles_d100_active %>% group_by(Image_Metadata_New_Name) %>% summarize_each(mean)
+
+# Make a matrix out of this data table 
+
+profiles_d100_active_avg <- data.frame(profiles_d100_active_avg[,-1], row.names = profiles_d100_active_avg$Image_Metadata_New_Name)
+
+# Calculate the correlation matrix 
+
+profiles_d100_active_cor <- cor(t(profiles_d100_active_avg))
+
+# Calculate distances 
+
+dist_d100_active_cor <- as.dist(1 - profiles_100_active_cor)
+
+# Create clusters 
+
+hclust_d100_active_cor <- hclust(dist_d100_active_cor, method = "average", members=NULL)
+
+# Plot heatmap and denodgrams 
+
+heatmap.2(profiles_d100_active_cor, 
+          Rowv=as.dendrogram((hclust_d100_active_cor)), 
+          Colv="Rowv", dendrogram=c("both"), 
+          density.info='none', 
+          ColSideColors = c(rep("#27bf79",19), rep("#be00be", 23), rep("#80ffff", 16), rep("#000080", 14)), 
+          RowSideColors = c(rep("#27bf79",19), rep("#be00be", 23), rep("#80ffff", 16), rep("#000080", 14)), 
+          trace="none", 
+          col=redblue(16), 
+          lhei = c(0.4,4,0.5), 
+          lwid = c(0.4,4,0.5), 
+          symm=FALSE, 
+          key=TRUE, 
+          symkey=TRUE, 
+          symbreaks=TRUE, 
+          scale="none")
