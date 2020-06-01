@@ -1,0 +1,63 @@
+
+library(dplyr)
+library(dbplyr)
+library(RSQLite)
+library(ggplot2)
+library(magrittr)
+library(stringr)
+library(knitr)
+library(cytominer)
+
+
+
+setwd("../../")
+setwd("./Ivan/RH_CellPainting")
+db <- src_sqlite("./RHProject.db")
+db
+
+image_D1 <- tbl(src = db, "RHD1_Per_Image")
+cells_D1 <- tbl(src = db, "RHD1_Per_Cells")
+cytoplasm_D1 <- tbl(src = db, "RHD1_Per_Cytoplasm")
+nuclei_D1 <- tbl(src = db, "RHD1_Per_Nuclei")
+
+image_D1_cleaned <- image_D1 %>% dplyr::filter(Image_Metadata_QCFlag_isBlurry == 0)
+image_D1_cleaned <- image_D1_cleaned %>% dplyr::filter(Image_Metadata_QCFlag_isSaturated == 0)
+
+image_D1 %>% count() %>% knitr::kable(caption = "No. of images")
+image_D1_cleaned %>% count() %>% knitr::kable(caption = "No. of images")
+
+cells_D1 %<>% inner_join(image_D1_cleaned, by = c("ImageNumber"))
+variables_cells_D1 <- colnames(cells_D1) %>% stringr::str_subset("^Cells_")
+nuclei_D1 %<>% inner_join(image_D1_cleaned, by = c("ImageNumber"))
+variables_nuclei_D1 <- colnames(nuclei_D1) %>% stringr::str_subset("^Nuclei_")
+cytoplasm_D1 %<>% inner_join(image_D1_cleaned, by = c("ImageNumber"))
+variables_cytoplasm_D1 <- colnames(cytoplasm_D1) %>% stringr::str_subset("^Cytoplasm_")
+
+profiles_cells_D1 <-
+      cytominer::aggregate(
+         population = cells_D1,
+         variables = variables_cells_D1,
+         strata = c("Image_Metadata_Plate", "Image_Metadata_Well"),
+         operation = "median"
+        )
+profiles_cells_D1 %<>% collect()
+
+profiles_nuclei_D1 <-
+      cytominer::aggregate(
+         population = nuclei_D1,
+         variables = variables_nuclei_D1,
+         strata = c("Image_Metadata_Plate", "Image_Metadata_Well"),
+         operation = "median"
+        )
+profiles_nuclei_D1 %<>% collect()
+
+profiles_cytoplasm_D1 <-
+      cytominer::aggregate(
+         population = cytoplasm_D1,
+         variables = variables_cytoplasm_D1,
+         strata = c("Image_Metadata_Plate", "Image_Metadata_Well"),
+         operation = "median"
+        )
+profiles_cytoplasm_D1 %<>% collect()
+
+
