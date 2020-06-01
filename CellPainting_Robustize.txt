@@ -1,0 +1,36 @@
+controls <- c("B12", "B19",	"C03", "C11", "C13",	"D04",	"D10",	"D14",	"E05",	"E15",	"F06",	"F16",	"G07",	"G17",	"H08",	"H22",	"I09",	"I21",	"J05",	"J10",	"J20",	"K04",	"K11",	"K19",	"L03",	"L12", "L18",	"L22",	"M13",	"M17",	"N14",	"N16",	"O07",	"O15")
+
+DMSO_cells_D1 <- cells_D1 %>% dplyr::filter(Image_Metadata_Well %in% controls)
+DMSO_cells_D1 %<>% collect()
+profiles_cells_D1_robust <-
+     cytominer::normalize(
+        population = profiles_cells_D1,
+         variables = variables_cells_D1,
+         strata =  c("Image_Metadata_Plate"),
+         sample = DMSO_cells_D1,
+         operation = "robustize",
+     )
+	 
+DMSO_nuclei_D1 <- nuclei_D1 %>% dplyr::filter(Image_Metadata_Well %in% controls)
+DMSO_nuclei_D1 %<>% collect()
+profiles_nuclei_D1_robust <-
+     cytominer::normalize(
+        population = profiles_nuclei_D1,
+         variables = variables_nuclei_D1,
+         strata =  c("Image_Metadata_Plate"),
+         sample = DMSO_nuclei_D1,
+         operation = "robustize",
+     )
+	 
+DMSO_cytoplasm_D1 <- cytoplasm_D1 %>% dplyr::filter(Image_Metadata_Well %in% controls)
+DMSO_cytoplasm_D1 %<>% collect()
+profiles_cytoplasm_D1_robust <-
+     cytominer::normalize(
+        population = profiles_cytoplasm_D1,
+         variables = variables_cytoplasm_D1,
+         strata =  c("Image_Metadata_Plate"),
+         sample = DMSO_cytoplasm_D1,
+         operation = "robustize",
+     )
+	 
+profiles_D1_robust <- profiles_cells_D1_robust %>% inner_join(profiles_nuclei_D1_robust, by = c("Image_Metadata_Plate", "Image_Metadata_Well")) %>% inner_join(profiles_cytoplasm_D1_robust, by = c("Image_Metadata_Plate", "Image_Metadata_Well"))
