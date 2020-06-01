@@ -1,4 +1,4 @@
-# This function is from Hutz et al: 
+# This function is from Hutz et al: DOI: 10.1177/1087057112469257
 # This function (mpvalue) calculates mp-values for
 # all treatments at the batch level.
 # Inputs are as follows:
