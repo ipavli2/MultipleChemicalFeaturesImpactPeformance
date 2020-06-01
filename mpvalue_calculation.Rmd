@@ -1,10 +1,16 @@
 library(plyr) 
 library(dplyr)
 
+profiles_all <- read.csv("profiles_all_robust_reduced.csv"
+
 # Split original datafile by concentation, including DMSO wells (concentration == 0)
 
-profiles_d100 <- profiles %>% filter(Image_Metadata_Concentration == 100 | Image_Metadata_Concentration == 0)
+profiles_d100 <- profiles_all %>% filter(Image_Metadata_Concentration == 100 | Image_Metadata_Concentration == 0)
 
 # Add batch labels 
 
+profiles_d100$batch <- rep(1, nrow(profiles_d100))
 
+# Drop columns that contain metadata except compound names
+
+profiles_d100 <- profiles_d100[-c(2:13)]
