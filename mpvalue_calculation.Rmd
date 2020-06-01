@@ -14,3 +14,11 @@ profiles_d100$batch <- rep(1, nrow(profiles_d100))
 # Drop columns that contain metadata except compound names
 
 profiles_d100 <- profiles_d100[-c(2:13)]
+
+# Calculate Mahalanobis distances and mp-values relative to DMSO 
+
+mpvalue(profiles_d100, txlabels = "Image_Metadata_New_Name", batchlabels = "batch", excludecols =c(), negctrls = "DMSO", outfile="mpvalue_d100_redo.txt", allbyall = FALSE, loadingsout = FALSE, pcaout = FALSE, gammaout=FALSE)
+
+# Calculate Mahalanobis distances and mp-values pairwise between every compound 
+
+mpvalue(profiles_d100, txlabels = "Image_Metadata_New_Name", batchlabels = "batch", excludecols =c(), negctrls = "DMSO", outfile="mpvalue_d100_redo.txt", allbyall = TRUE, loadingsout = FALSE, pcaout = FALSE, gammaout=FALSE)
