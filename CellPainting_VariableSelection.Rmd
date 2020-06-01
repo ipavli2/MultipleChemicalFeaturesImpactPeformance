@@ -1,22 +1,30 @@
-
+# Merge all duplicates into one file, note metadata was added manually using Word Excel 
 
 profiles_all <- rbind(profiles_D1_robust, profiles_D2_robust, profiles_D3_robust, profiles_D4_robust)
 profiles_all <- subset(profiles_all, select = -c(Cells_Number_Object_Number, Nuclei_Number_Object_Number, Cytoplasm_Number_Object_Number))
 
+# Define variables 
+
 variables <-
   colnames(profiles_all) %>%
   str_subset("^Nuclei_|^Cells_|^Cytoplasm_")
-  
+ 
+# Drop all columns that contain any NA or Inf enteries 
+
 profiles_all <- cytominer::variable_select( 
 		 population = profiles_all, 
 		 variables = variables, 
 		 operation = "drop_na_columns", 
 		 cutoff = 0)
+
+# Define variables 
 		 
 variables <-
   colnames(profiles_all) %>%
   str_subset("^Nuclei_|^Cells_|^Cytoplasm_")
-  
+
+# Drop columns where varience is near zero 
+
 profiles_all <-
      cytominer::variable_select(
          population = profiles_all,
@@ -25,28 +33,37 @@ profiles_all <-
          operation = "variance_threshold"
     ) 
 
+# Define variables 
+
 variables <-
   colnames(profiles_all) %>%
   str_subset("^Nuclei_|^Cells_|^Cytoplasm_")
-  
+
+# Calculate the replicate correlations for each feature
+
 feature_replicate_correlations <-
     profiles_all %>%
     cytominer::variable_importance(
          variables = variables,
          strata = c("Image_Metadata_NotebookName", "Image_Metadata_Concentration"),
          replicates = 4)
-		 
+
+# Remove features that have a median replicate correlation less than 0.5 
+
 profiles_all %<>%
   select_(.dots = setdiff(x = colnames(profiles_all),
                           y = feature_replicate_correlations %>%
                             filter(median < 0.5) %>%
                             magrittr::extract2("variable"))
           )
+# Define variables 
 
 variables <-
   colnames(profiles_all) %>%
   str_subset("^Nuclei_|^Cells_|^Cytoplasm_")
-  
+
+# Remove any features that have a correlation greater than 0.95 with any other feature 
+
 profiles_all <-
   cytominer::variable_select(
     population = profiles_all,
@@ -55,5 +72,7 @@ profiles_all <-
     operation = "correlation_threshold",
     cutoff = 0.95) %>%
   collect()
+
+#Output file, this are the profiles provided in this repository 
   
 write.csv(profiles_all, "profiles_all_robust_reduced.csv")
