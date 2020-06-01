@@ -1,0 +1,8 @@
+library(plyr) 
+library(dplyr)
+
+# Split original datafile by concentation, including DMSO wells (concentration == 0)
+
+profiles_d100 <- profiles_all %>% filter(Image_Metadata_Concentration == 100 | Image_Metadata_Concentration == 0)
+
+# 
