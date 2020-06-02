@@ -1,4 +1,7 @@
-# Segement data file by analogs 
+library(ggplot2)
+library(dplyr)
+
+# Segement data file by analogs at d100
 
 profiles_m_analog_d100 <- profiles_d100 %>% filter(
    Image_Metadata_New_Name == "1m" | Image_Metadata_New_Name == "2m" | Image_Metadata_New_Name == "3m" | Image_Metadata_New_Name == "4m")
@@ -9,17 +12,46 @@ pca_m_analog_d100 <- prcomp(profiles_m_analog_d100[c(14:447)], scale.=TRUE, cent
 
 # Extract the values of rotated data 
 
-pca_m_analog_d100_x <- cbind(profiles_m_analog_d100[c(1:15)], pca_m_analog_d100$x)
+pca_m_analog_d100_x <- cbind(profiles_m_analog_d100[c(1:14)], pca_m_analog_d100$x)
 
 # Extract the precentage of correlation explained 
 
 summary(pca_m_analog_d100)
 
-# Plot PCA, note final graph was made through editing using PowerPoint, adding a different key, matching the font style for the axis and adding mp-values.
+# Plot PCA at 100 uM, note final graph was made through editing using PowerPoint, adding a different key, matching the font style for the axis and adding mp-values.
 
 p.m.100 <- ggplot(pca_m_analog_d100_x, aes(x=PC1, y=PC2, color = Image_Metadata_New_Name))
                   + geom_point(size=5) 
                   + stat_ellipse(level=0.95, linetype=1) 
-                  + scale_color_manual(values = c("#bd00be", "#80ffff", "#26bf79", "#000080"))
+                  + scale_color_manual(values = c("#26bf79","#bd00be", "#80ffff", "#000080"))
 
 p.m.100 + theme_bw() + theme(axis.text = element_text(size=20, face="bold"), panel.border = element_rect(size=1.5))
+
+# Dose PCA for the same analogs 
+# Segement by analog 
+
+profiles_m_analog <- profiles_all %>% filter(str_detect(Image_Metadata_New_Name, "m"))
+ 
+# Calculate PCA 
+
+pca_m_analog <- prcomp(profiles_m_analog[c(14:447)], scale.=TRUE, center=TRUE)
+
+# Extract the values of rotated data 
+
+pca_m_analog_x <- cbind(profiles_m_analog[c(1:14)], pca_m_analog$x)
+
+# Extract the precentage of correlation explained 
+
+summary(pca_m_analog)
+
+# Plot PCA, note final graph was made through editing using PowerPoint, adding a different key and matching the font style.
+
+p.m <- ggplot(pca_m_analog_x, aes(x=PC1, y=PC2)) 
+         + geom_point(aes(color = Image_Metadata_New_Name, size = Image_Metadata_Concentration)) 
+         + scale_color_manual(values = c("#26bf79","#bd00be", "#80ffff", "#000080"))
+
+p.m + theme_bw() + theme(axis.text = element_text(size=20, face="bold"), panel.border = element_rect(size=1.5))
+
+
+
+
