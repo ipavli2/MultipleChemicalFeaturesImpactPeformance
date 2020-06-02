@@ -20,7 +20,7 @@ dist_d100_active_cor <- as.dist(1 - profiles_100_active_cor)
 
 hclust_d100_active_cor <- hclust(dist_d100_active_cor, method = "average", members=NULL)
 
-# Plot heatmap and denodgrams 
+# Plot heatmap and dendrograms 
 
 heatmap.2(profiles_d100_active_cor, 
           Rowv=as.dendrogram((hclust_d100_active_cor)), 
