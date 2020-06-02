@@ -15,7 +15,7 @@ pca_m_analog_d100_x <- cbind(profiles_m_analog_d100[c(1:15)], pca_m_analog_d100$
 
 summary(pca_m_analog_d100)
 
-# Plot PCA, note final graph was made through editing using PowerPoint, adding a different key and matching the font style for the axis.
+# Plot PCA, note final graph was made through editing using PowerPoint, adding a different key, matching the font style for the axis and adding mp-values.
 
 p.m.100 <- ggplot(pca_m_analog_d100_x, aes(x=PC1, y=PC2, color = Image_Metadata_New_Name))
                   + geom_point(size=5) 
