@@ -1,7 +1,7 @@
 library(plyr) 
 library(dplyr)
 
-profiles_all <- read.csv("profiles_all_robust_reduced.csv"
+profiles_all <- read.csv("profiles_all_robust_reduced.csv")
 
 # Split original datafile by concentation, including DMSO wells (concentration == 0)
 
