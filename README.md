@@ -1,7 +1,7 @@
 # MultipleChemicalFeaturesImpactPeformance
 Repository of median profiles used to profile a library of benzofuran and benzopyran and the commands used to generate data and figures in doi of paper.
 
-CellProfiler_illum, CellProfiler_QC, CellProfiler_analysis were the pipelines used for the generation of single-cell profiles from images using CellProfiler 3.0 as described here: DOI: 10.1038/nprot.2016.105
+CellProfiler_illum, CellProfiler_QC, CellProfiler_analysis were the pipelines used for the generation of single-cell profiles from images using CellProfiler 3.0 as described here: DOI: 10.1038/nprot.2016.105.
 
 Single-cell profiles were aggretgated, normalized and reduced with Cytominer_Aggregation, Cytominer_Robustize amd Cytominer_VariableSelection.
 
