@@ -11,4 +11,6 @@ Mahalanobis and mp-value calculation were done using the mpvalue amd mpvalue_cal
 
 Hierchical clustering was done using hierchical_clustering.
 
+PCA plots with confidence intervals were made using PCA_plots.
+
 All analysis in R was done using R version 3.4.4. 
