@@ -46,9 +46,7 @@ summary(pca_m_analog)
 
 # Plot PCA, note final graph was made through editing using PowerPoint, adding a different key and matching the font style.
 
-p.m <- ggplot(pca_m_analog_x, aes(x=PC1, y=PC2)) 
-         + geom_point(aes(color = Image_Metadata_New_Name, size = Image_Metadata_Concentration)) 
-         + scale_color_manual(values = c("#26bf79","#bd00be", "#80ffff", "#000080"))
+p.m <- ggplot(pca_m_analog_x, aes(x=PC1, y=PC2)) + geom_point(aes(color = Image_Metadata_New_Name, size = Image_Metadata_Concentration)) + scale_color_manual(values = c("#26bf79","#bd00be", "#80ffff", "#000080"))
 
 p.m + theme_bw() + theme(axis.text = element_text(size=20, face="bold"), panel.border = element_rect(size=1.5))
 
