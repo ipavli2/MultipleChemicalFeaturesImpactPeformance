@@ -20,10 +20,7 @@ summary(pca_m_analog_d100)
 
 # Plot PCA at 100 uM, note final graph was made through editing using PowerPoint, adding a different key, matching the font style for the axis and adding mp-values.
 
-p.m.100 <- ggplot(pca_m_analog_d100_x, aes(x=PC1, y=PC2, color = Image_Metadata_New_Name))
-                  + geom_point(size=5) 
-                  + stat_ellipse(level=0.95, linetype=1) 
-                  + scale_color_manual(values = c("#26bf79","#bd00be", "#80ffff", "#000080"))
+p.m.100 <- ggplot(pca_m_analog_d100_x, aes(x=PC1, y=PC2, color = Image_Metadata)) + geom_point(size=5) + stat_ellipse(level=0.95, linetype=1) + scale_color_manual(values = c("#26bf79","#bd00be", "#80ffff", "#000080"))
 
 p.m.100 + theme_bw() + theme(axis.text = element_text(size=20, face="bold"), panel.border = element_rect(size=1.5))
 
